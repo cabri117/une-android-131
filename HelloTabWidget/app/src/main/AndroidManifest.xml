@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.uneandroid131.hellotabwidget.app" >
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".ArtistsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".AlbumsActivity"
+            android:label="@string/title_activity_albums" >
+        </activity>
+        <activity
+            android:name=".SongsActivity"
+            android:label="@string/title_activity_songs" >
+        </activity>
+        <activity
+            android:name=".HelloTabWidget"
+            android:label="@string/title_activity_hello_tab_widget"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

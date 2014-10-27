@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ProjectApp4.4</string>
+    <string name="activity">First Activity</string>
+    <string name="activity2">Second Activity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_my_activity2">MyActivity2</string>
+    <string name="previousText">Previous Activity</string>
+    <string name="destroy">Destroy</string>
+    <string name="nextText">Next Activity</string>
+
+</resources>

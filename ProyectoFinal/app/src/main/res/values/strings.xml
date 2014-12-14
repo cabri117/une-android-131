@@ -8,5 +8,6 @@
     <string name="clearAll">Clear</string>
     <string name="interpretableJSON">Interpretable JSON</string>
     <string name="title_activity_maps">Map</string>
+    <string name="google_maps_keys">AIzaSyAuTPMMJIdMmQhAIWgfybCMYiRJtH--4qQ</string>
 
 </resources>

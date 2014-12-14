@@ -7,6 +7,7 @@ import Http.JSONResponseHandler;
 import Http.OnTaskFinishedHandler;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -105,8 +106,21 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                 getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        try {
+                            JSONObject json = new JSONObject(results.get(i));
+                            String lat = json.getString(Earthquakes.LATITUDE_TAG);
+                            String lng = json.getString(Earthquakes.LONGITUDE_TAG);
+                            Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putFloat(Earthquakes.LATITUDE_TAG, Float.valueOf(lat));
+                            bundle.putFloat(Earthquakes.LONGITUDE_TAG, Float.valueOf(lng));
+                            mapIntent.putExtras(bundle);
+                            startActivity(mapIntent);
 
-                        Toast.makeText(MainActivity.this,"Vamos al Mapa",Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 });
                 break;

@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class HttpRequestTask extends AsyncTask < Void, Void, List <String> > {
+public class HttpRequestTask extends AsyncTask < Void, Void, List <Object> > {
 
     private URL url;
     private HttpResponseHandler responseHandler;
@@ -16,10 +16,10 @@ public class HttpRequestTask extends AsyncTask < Void, Void, List <String> > {
     private int taskId;
 
     @Override
-    protected void onPostExecute(List<String> strings) {
+    protected void onPostExecute(List<Object> response) {
 
-        onTaskFinishedHandler.OnTaskFinished(taskId, strings);
-        super.onPostExecute(strings);
+        onTaskFinishedHandler.OnTaskFinished(taskId, response);
+        super.onPostExecute(response);
 
     }
 
@@ -34,7 +34,7 @@ public class HttpRequestTask extends AsyncTask < Void, Void, List <String> > {
     }
 
     @Override
-    protected List<String> doInBackground(Void... voids) {
+    protected List<Object> doInBackground(Void... voids) {
 
         HttpURLConnection connection = null;
         try {

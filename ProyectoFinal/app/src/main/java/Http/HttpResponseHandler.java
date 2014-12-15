@@ -5,5 +5,5 @@ import java.util.List;
 
 
 public interface HttpResponseHandler {
-        public List<String> handleResponse (InputStream responseStream);
+        public List<Object> handleResponse (InputStream responseStream);
 }

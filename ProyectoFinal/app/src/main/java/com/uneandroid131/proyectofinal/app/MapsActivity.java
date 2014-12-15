@@ -1,6 +1,6 @@
  package com.uneandroid131.proyectofinal.app;
 
- import Earthquakes.Earthquakes;
+ import Earthquakes.EarthquakesRequest;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.maps.CameraUpdate;
@@ -13,8 +13,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private float lat;
-    private float lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +65,8 @@ public class MapsActivity extends FragmentActivity {
 
     private void setUpMap() {
         Bundle bundle = getIntent().getExtras();
-        this.lat = bundle.getFloat(Earthquakes.LATITUDE_TAG);
-        this.lng = bundle.getFloat(Earthquakes.LONGITUDE_TAG);
+        float lat = bundle.getFloat(EarthquakesRequest.LATITUDE_TAG);
+        float lng = bundle.getFloat(EarthquakesRequest.LONGITUDE_TAG);
         LatLng position = new LatLng(lat, lng);
         mMap.addMarker(new MarkerOptions().position(position).title("Marker"));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 2);

@@ -1,6 +1,7 @@
 package com.uneandroid131.proyectofinal.app;
 
-import Earthquakes.Earthquakes;
+import Earthquakes.Earthquake;
+import Earthquakes.EarthquakesRequest;
 import Http.HttpJSONResponseFormatter;
 import Http.HttpRequestTask;
 import Http.JSONResponseHandler;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,15 +32,15 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
 
     private static final String URLERROR = "URL Error";
     private static final String NETWORKERROR = "Network Error";
-    private Earthquakes earthquakes;
+    private EarthquakesRequest earthquakes;
     private static final String ENCODING = "UTF-8";
     private static final int EARTHQUAKES = 1;
-    List<String> results;
+    List<Object> results;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.earthquakes = new Earthquakes();
+        this.earthquakes = new EarthquakesRequest();
         Button getJSONButton = (Button) findViewById(R.id.getJSONButton);
         Button interpretableJSON = (Button) findViewById(R.id.interpretableJSONButton);
         getJSONButton.setOnClickListener(this);
@@ -77,11 +79,21 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
 
                 getUrlRequest(new OnTaskFinishedHandler() {
                     @Override
-                    public void OnTaskFinished(int taskId, List<String> results) {
-                        MainActivity.this.results = results;
-                        MainActivity.this.setListAdapter(new ArrayAdapter<>(
+                    public void OnTaskFinished(int taskId, List<Object> results) {
+
+                        for(Object result: results){
+                            Earthquake earthquake = (Earthquake) result;
+                            Log.d("ID", earthquake.id);
+                            Log.d("LAT",String.valueOf(earthquake.lat));
+                            Log.d("LNG",String.valueOf(earthquake.lng));
+                            Log.d("MAGNITUDE",String.valueOf(earthquake.magnitude));
+                        }
+
+                        /* TODO HAY QUE FORMATEAR LA LISTA CON UN ELEMENTO PARA CADA CAMPO
+                        * TODO LOS DATOS ESTAN EN LA VARIABLE earthquake */
+                      /*  MainActivity.this.setListAdapter(new ArrayAdapter<>(
                                 MainActivity.this,
-                                R.layout.row, results));
+                                R.layout.row, results));*/
                     }
                 }, earthquakes);
                 break;
@@ -89,7 +101,7 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
 
                 getUrlRequest(new OnTaskFinishedHandler() {
                     @Override
-                    public void OnTaskFinished(int taskId, List<String> results) {
+                    public void OnTaskFinished(int taskId, List<Object> results) {
                         MainActivity.this.results = results;
                             MainActivity.this.setListAdapter(new ArrayAdapter<>(
                                     MainActivity.this,
@@ -107,13 +119,13 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         try {
-                            JSONObject json = new JSONObject(results.get(i));
-                            String lat = json.getString(Earthquakes.LATITUDE_TAG);
-                            String lng = json.getString(Earthquakes.LONGITUDE_TAG);
+                            JSONObject json = new JSONObject(results.get(i).toString());
+                            String lat = json.getString(EarthquakesRequest.LATITUDE_TAG);
+                            String lng = json.getString(EarthquakesRequest.LONGITUDE_TAG);
                             Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
                             Bundle bundle = new Bundle();
-                            bundle.putFloat(Earthquakes.LATITUDE_TAG, Float.valueOf(lat));
-                            bundle.putFloat(Earthquakes.LONGITUDE_TAG, Float.valueOf(lng));
+                            bundle.putFloat(EarthquakesRequest.LATITUDE_TAG, Float.valueOf(lat));
+                            bundle.putFloat(EarthquakesRequest.LONGITUDE_TAG, Float.valueOf(lng));
                             mapIntent.putExtras(bundle);
                             startActivity(mapIntent);
 
@@ -138,8 +150,8 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
 
         if (isConnectedToNetwork()) {
             try {
-                URL url = new URL(Earthquakes.SITEURL);
-                JSONResponseHandler responseHandler = new JSONResponseHandler(Earthquakes.TAG, ENCODING, httpJSONResponseFormatter);
+                URL url = new URL(EarthquakesRequest.SITEURL);
+                JSONResponseHandler responseHandler = new JSONResponseHandler(EarthquakesRequest.TAG, ENCODING, httpJSONResponseFormatter);
                 HttpRequestTask get = new HttpRequestTask(EARTHQUAKES, url,"GET", responseHandler, handler);
                 get.execute();
 

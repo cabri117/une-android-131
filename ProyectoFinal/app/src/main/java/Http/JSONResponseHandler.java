@@ -26,7 +26,7 @@ public class JSONResponseHandler implements HttpResponseHandler {
 
     @Override
 
-    public List<String> handleResponse(InputStream response) {
+    public List<Object> handleResponse(InputStream response) {
         BufferedReader reader = null;
         List<String> result = new ArrayList <>();
 
@@ -42,12 +42,12 @@ public class JSONResponseHandler implements HttpResponseHandler {
 
                 JSONArray jsonArray = new JSONArray(result.toString());
                 JSONArray tagArray =  (JSONArray) jsonArray.getJSONObject(0).get(tag);
-                ArrayList <String> formattedJSONArray = new ArrayList<>();
+                ArrayList <Object> formattedJSONArray = new ArrayList<>();
                 for (int i=0; i < tagArray.length(); i++) {
                     JSONObject jsonObject = tagArray.getJSONObject(i);
                     formattedJSONArray.add(responseFormatter.formatJSONResponse(jsonObject));
                 }
-                return formattedJSONArray;
+                return  formattedJSONArray;
 
             } catch (JSONException e ){
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package Http;
 
 import android.os.AsyncTask;
+import org.apache.http.client.HttpResponseException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -46,15 +47,12 @@ public class HttpRequestTask extends AsyncTask < Void, Void, List <Object> > {
             //make some HTTP header nicety
             connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
             connection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+            // Server returned HTTP error code.
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 // OK
                 return responseHandler.handleResponse(connection.getInputStream());
-                // Server returned HTTP error code.
-            } else {
-                // otherwise, if any other status code is returned, or no status
-                // code is returned, do stuff in the else block
-                return null;
-            }
+
+            } else throw new HttpResponseException(connection.getResponseCode(),"Not Found");
         } catch (IOException e) {
             e.printStackTrace();
 

@@ -68,7 +68,9 @@ public class MapsActivity extends FragmentActivity {
         float lat = bundle.getFloat(EarthquakesRequest.LATITUDE_TAG);
         float lng = bundle.getFloat(EarthquakesRequest.LONGITUDE_TAG);
         LatLng position = new LatLng(lat, lng);
-        mMap.addMarker(new MarkerOptions().position(position).title("Marker"));
+
+        mMap.addMarker(new MarkerOptions().position(position).title("Earthquake")
+                .snippet("lat : " + String.valueOf(lat) + "\n" + "long : " + lng));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 2);
         mMap.animateCamera(cameraUpdate);
     }

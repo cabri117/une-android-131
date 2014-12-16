@@ -1,6 +1,5 @@
 package com.uneandroid131.proyectofinal.app;
 
-import Earthquakes.Earthquake;
 import Earthquakes.EarthquakesRequest;
 import Http.HttpJSONResponseFormatter;
 import Http.HttpRequestTask;
@@ -12,13 +11,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +45,10 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
         interpretableJSON.setOnClickListener(this);
     }
 
+    protected void onStart() {
+        super.onStart();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,20 +82,12 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                 getUrlRequest(new OnTaskFinishedHandler() {
                     @Override
                     public void OnTaskFinished(int taskId, List<Object> results) {
-
-                        for(Object result: results){
-                            Earthquake earthquake = (Earthquake) result;
-                            Log.d("ID", earthquake.id);
-                            Log.d("LAT",String.valueOf(earthquake.lat));
-                            Log.d("LNG",String.valueOf(earthquake.lng));
-                            Log.d("MAGNITUDE",String.valueOf(earthquake.magnitude));
-                        }
-
-                        /* TODO HAY QUE FORMATEAR LA LISTA CON UN ELEMENTO PARA CADA CAMPO
-                        * TODO LOS DATOS ESTAN EN LA VARIABLE earthquake */
-                      /*  MainActivity.this.setListAdapter(new ArrayAdapter<>(
-                                MainActivity.this,
-                                R.layout.row, results));*/
+                       if (results != null) {
+                           MainActivity.this.results = results;
+                           MainActivity.this.setListAdapter(new EarthquakeAdapter(
+                                   MainActivity.this, R.layout.interpretable_row,
+                                   results));
+                       }
                     }
                 }, earthquakes);
                 break;
@@ -102,11 +96,12 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                 getUrlRequest(new OnTaskFinishedHandler() {
                     @Override
                     public void OnTaskFinished(int taskId, List<Object> results) {
-                        MainActivity.this.results = results;
+                        if (results != null ) {
+                            MainActivity.this.results = results;
                             MainActivity.this.setListAdapter(new ArrayAdapter<>(
                                     MainActivity.this,
                                     R.layout.row, results));
-
+                        }
                     }
                 }, new HttpJSONResponseFormatter() {
                     @Override
@@ -115,34 +110,12 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                     }
                 });
 
-                getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        try {
-                            JSONObject json = new JSONObject(results.get(i).toString());
-                            String lat = json.getString(EarthquakesRequest.LATITUDE_TAG);
-                            String lng = json.getString(EarthquakesRequest.LONGITUDE_TAG);
-                            Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putFloat(EarthquakesRequest.LATITUDE_TAG, Float.valueOf(lat));
-                            bundle.putFloat(EarthquakesRequest.LONGITUDE_TAG, Float.valueOf(lng));
-                            mapIntent.putExtras(bundle);
-                            startActivity(mapIntent);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
                 break;
             case R.id.clearButton:
-                results.clear();
-                MainActivity.this.setListAdapter(new ArrayAdapter<>(
-                        MainActivity.this,
-                        R.layout.row, results));
+                setListAdapter(null);
                 break;
         }
+
     }
 
 
@@ -154,8 +127,7 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                 JSONResponseHandler responseHandler = new JSONResponseHandler(EarthquakesRequest.TAG, ENCODING, httpJSONResponseFormatter);
                 HttpRequestTask get = new HttpRequestTask(EARTHQUAKES, url,"GET", responseHandler, handler);
                 get.execute();
-
-            } catch (MalformedURLException e) {
+            } catch (  MalformedURLException e  ) {
                 Toast.makeText(this, URLERROR, Toast.LENGTH_SHORT)
                         .show();
             }
@@ -176,5 +148,23 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                 return true;
 
         return false;
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        try {
+            JSONObject json = new JSONObject(results.get(position).toString());
+            String lat = json.getString(EarthquakesRequest.LATITUDE_TAG);
+            String lng = json.getString(EarthquakesRequest.LONGITUDE_TAG);
+            Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putFloat(EarthquakesRequest.LATITUDE_TAG, Float.valueOf(lat));
+            bundle.putFloat(EarthquakesRequest.LONGITUDE_TAG, Float.valueOf(lng));
+            mapIntent.putExtras(bundle);
+            startActivity(mapIntent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

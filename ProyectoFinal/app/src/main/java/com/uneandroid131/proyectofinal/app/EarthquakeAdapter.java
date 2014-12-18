@@ -70,15 +70,13 @@ public class EarthquakeAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewEarth = null;
         Object result = earthquakes.get(position);
-
-        if (viewEarth == null) {
-            viewEarth = layoutInflater.inflate(R.layout.interpretable_row, null);
+        View viewEarth;
+        if (view == null) {
+            viewEarth = layoutInflater.inflate(R.layout.interpretable_row, viewGroup, false);
         } else {
             viewEarth = view;
         }
-
         TextView textView = (TextView) viewEarth.findViewById(R.id.esid);
         final Earthquake earthquake = (Earthquake) result;
         textView.setText("Esid : " + earthquake.id);

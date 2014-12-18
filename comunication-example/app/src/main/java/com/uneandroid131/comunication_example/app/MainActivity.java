@@ -23,7 +23,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         staticText = (TextView) findViewById(R.id.textViewStaticMsg);
         invokeButton.setOnClickListener(this);
         invokeStaticButton.setOnClickListener(this);
-
     }
 
 

@@ -2,14 +2,17 @@ package com.uneandroid131.comunication_example.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
-public class StaticMsgActivity extends Activity implements View.OnClickListener{
+public class StaticMsgActivity extends Activity implements View.OnClickListener,TextView.OnEditorActionListener{
     public static String msg = null;
     private EditText responseText;
 
@@ -20,6 +23,7 @@ public class StaticMsgActivity extends Activity implements View.OnClickListener{
         Button okButton = (Button) findViewById(R.id.okButton);
         responseText = (EditText) findViewById(R.id.result);
         okButton.setOnClickListener(this);
+        responseText.setOnEditorActionListener(this);
     }
 
 
@@ -55,5 +59,14 @@ public class StaticMsgActivity extends Activity implements View.OnClickListener{
 
         StaticMsgActivity.msg = responseText.getText().toString();
         finish();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int actionCode, KeyEvent keyEvent) {
+        if (actionCode == EditorInfo.IME_ACTION_DONE) {
+            endWithStaticResult();
+            return true;
+        }
+        return false;
     }
 }

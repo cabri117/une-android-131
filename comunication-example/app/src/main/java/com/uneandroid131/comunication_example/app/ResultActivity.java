@@ -3,15 +3,18 @@ package com.uneandroid131.comunication_example.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class ResultActivity extends Activity implements View.OnClickListener{
+public class ResultActivity extends Activity implements View.OnClickListener,TextView.OnEditorActionListener{
 
     public static final String RETURN_MSG = "return_msg";
     private EditText responseText;
@@ -23,6 +26,7 @@ public class ResultActivity extends Activity implements View.OnClickListener{
         Button okButton = (Button) findViewById(R.id.okButton);
         okButton.setOnClickListener(this);
         responseText = (EditText) findViewById(R.id.result);
+        responseText.setOnEditorActionListener(this);
      }
 
 
@@ -66,5 +70,14 @@ public class ResultActivity extends Activity implements View.OnClickListener{
         } else
             Toast.makeText(this,"Type a Response!!", Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int actionCode, KeyEvent keyEvent) {
+        if (actionCode == EditorInfo.IME_ACTION_DONE) {
+            endWithResult();
+            return true;
+        }
+        return false;
     }
 }
